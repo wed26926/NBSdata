@@ -35,7 +35,7 @@ func initializeProvince(){
 }
 
 func initializeTrade(){
-	content,err := ioutil.ReadFile(os.Getenv("GOPATH")+"/src/NBSdata/commonTools/trades.txt")
+	content,err := ioutil.ReadFile(os.Getenv("GOPATH")+"/src/NBSdata/commonTools/trades.json")
 	if err != nil{
 		panic(err)
 	}
