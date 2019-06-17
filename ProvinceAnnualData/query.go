@@ -1,12 +1,15 @@
 package ProvinceAnnualData
 
 import (
+	"bytes"
+	"encoding/json"
+	"net/http"
 	"strconv"
 	"time"
 )
 
 const(
-	commonurl = "http://data.stats.gov.cn/easyquery.htm?"
+	commonurl = "http://data.stats.gov.cn/easyquery.htm?m=QueryData&dbcode=fsnd&rowcode=zb&colcode=sj"
 )
 
 type Data struct {
@@ -51,8 +54,36 @@ type Response struct {
 	Returndata	Returndata 	`json:"returndata"`
 }
 
-func QueryByProvince(provinceCode string,tradeCode string){
+func QueryByProvince(provinceCode string,tradeCode string) Response{
 	timetemp := time.Now().UnixNano()
 	k1 := strconv.FormatInt(timetemp,64)
-	url := commonurl +
+	wds := make([]Wd,0)
+	dfwds := make([]Wd,0)
+	wds = append(wds,Wd{"reg",provinceCode})
+	dfwds = append(dfwds,Wd{"zb",tradeCode})
+	wdsBytes,err := json.Marshal(wds)
+	if err != nil{
+		panic(err)
+	}
+	dfwdsBytes,err := json.Marshal(dfwds)
+	if err != nil{
+		panic(err)
+	}
+	wdsString,dfwdsString := string(wdsBytes),string(dfwdsBytes)
+	url := commonurl + "&wds=" + wdsString + "&dfwds=" + dfwdsString + "&k1=" + k1
+	Respond,err := http.Get(url)
+	if err != nil{
+		panic(err)
+	}
+	buf := bytes.NewBuffer(make([]byte,0,512))
+	_,err = buf.ReadFrom(Respond.Body)
+	if err != nil{
+		panic(err)
+	}
+	var result Response
+	err = json.Unmarshal(buf.Bytes(),&result)
+	if err != nil{
+		panic(err)
+	}
+	return result
 }
