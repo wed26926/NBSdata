@@ -1,4 +1,4 @@
-package queryByProvince
+package ProvinceAnnualData
 
 import (
 	"strconv"
@@ -54,4 +54,5 @@ type Response struct {
 func QueryByProvince(provinceCode string,tradeCode string){
 	timetemp := time.Now().UnixNano()
 	k1 := strconv.FormatInt(timetemp,64)
+	url := commonurl +
 }
