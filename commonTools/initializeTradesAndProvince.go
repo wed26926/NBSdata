@@ -53,9 +53,6 @@ func  GetProvinceData() map[string]string{
 func GetTrade() TradeTree {
 	return root
 }
-func SerSelectInterval(i int){
+func SetSelectInterval(i int){
 	selectInterval = i
-}
-func ShowProvince(){
-
 }
