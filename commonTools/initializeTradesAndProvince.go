@@ -3,14 +3,16 @@ package commonTools
 import (
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"os"
 	"strings"
 )
 
 type TradeTree struct{
-	Name   string      `json:"name"`
-	Id string          `json:"id"`
-	Childs []TradeTree `json:"childs"`
+	Name   	string		`json:"name"`
+	Id 		string		`json:"id"`
+	Level 	int			`json:"level"`
+	Childs	[]TradeTree	`json:"childs"`
 }
 
 var province map[string]string
@@ -37,7 +39,8 @@ func initializeProvince(){
 func initializeTrade(){
 	content,err := ioutil.ReadFile(os.Getenv("GOPATH")+"/src/NBSdata/commonTools/trades.json")
 	if err != nil{
-		panic(err)
+		log.Println("未能载入行业树文件，请尝试重建行业树")
+		return
 	}
 	err = json.Unmarshal(content,&root)
 	if err != nil{
