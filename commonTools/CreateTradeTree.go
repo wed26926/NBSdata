@@ -37,7 +37,7 @@ func RebuildTradeTree(){
 }
 
 func selectTrade(id string,level int) []TradeTree{
-	time.Sleep(1*time.Second)
+	time.Sleep(time.Duration(selectInterval) * time.Second)
 	url := "http://data.stats.gov.cn/easyquery.htm?dbcode=fsnd&wdcode=zb&m=getTree&id="+id
 	rp,err := http.Get(url)
 	if err != nil{
