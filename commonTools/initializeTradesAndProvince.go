@@ -17,12 +17,13 @@ type TradeTree struct{
 
 var province map[string]string
 var root TradeTree
+var selectInterval int
 
 func init() {
 	initializeProvince()
 	initializeTrade()
+	selectInterval = 1
 }
-
 func initializeProvince(){
 	province = make(map[string]string)
 	content,err := ioutil.ReadFile(os.Getenv("GOPATH")+"/src/NBSdata/commonTools/province.txt")
@@ -35,7 +36,6 @@ func initializeProvince(){
 		province[provinceDetail[0]] = provinceDetail[1]
 	}
 }
-
 func initializeTrade(){
 	content,err := ioutil.ReadFile(os.Getenv("GOPATH")+"/src/NBSdata/commonTools/trades.json")
 	if err != nil{
@@ -50,7 +50,12 @@ func initializeTrade(){
 func  GetProvinceData() map[string]string{
 	return province
 }
-
 func GetTrade() TradeTree {
 	return root
+}
+func SerSelectInterval(i int){
+	selectInterval = i
+}
+func ShowProvince(){
+
 }
