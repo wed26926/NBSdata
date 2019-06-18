@@ -3,6 +3,7 @@ package ProvinceAnnualData
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -13,7 +14,7 @@ const(
 )
 
 type Data struct {
-	Data		int 	`json:"data"`
+	Data		float64 `json:"data"`
 	Dotcount	int 	`json:"dotcount"`
 	Hasdata 	bool 	`json:"hasdata"`
 	Strdata 	string 	`json:"strdata"`
@@ -36,7 +37,7 @@ type Node struct {
 	Memo 		string 	`json:"memo"`
 	Name 		string 	`json:"name"`
 	Nodesort 	string 	`json:"nodesort"`
-	Sortcode 	string 	`json:"sortcode"`
+	Sortcode 	int 	`json:"sortcode"`
 	Tag 		string 	`json:"tag"`
 	Unit 		string 	`json:"unit"`
 }
@@ -55,22 +56,37 @@ type Response struct {
 }
 
 func QueryByProvince(provinceCode string,tradeCode string) Response{
-	timetemp := time.Now().UnixNano()
-	k1 := strconv.FormatInt(timetemp,64)
+	timetemp := int(time.Now().UnixNano())
+	k1 := strconv.Itoa(timetemp)
 	wds := make([]Wd,0)
 	dfwds := make([]Wd,0)
-	wds = append(wds,Wd{"reg",provinceCode})
-	dfwds = append(dfwds,Wd{"zb",tradeCode})
+	wds = append(wds,Wd{provinceCode,"reg"})
+	dfwds = append(dfwds,Wd{tradeCode,"zb"})
 	wdsBytes,err := json.Marshal(wds)
+	wdsBytes = bytes.Replace(wdsBytes,[]byte{91},[]byte{37,53,66},-1)
+	wdsBytes = bytes.Replace(wdsBytes,[]byte{93},[]byte{37,53,68},-1)
+	wdsBytes = bytes.Replace(wdsBytes,[]byte{123},[]byte{37,55,66},-1)
+	wdsBytes = bytes.Replace(wdsBytes,[]byte{125},[]byte{37,55,68},-1)
+	wdsBytes = bytes.Replace(wdsBytes,[]byte{34},[]byte{37,50,50},-1)
+	wdsBytes = bytes.Replace(wdsBytes,[]byte{58},[]byte{37,51,65},-1)
+	wdsBytes = bytes.Replace(wdsBytes,[]byte{44},[]byte{37,50,67},-1)
 	if err != nil{
 		panic(err)
 	}
 	dfwdsBytes,err := json.Marshal(dfwds)
+	dfwdsBytes = bytes.Replace(dfwdsBytes,[]byte{91},[]byte{37,53,66},-1)
+	dfwdsBytes = bytes.Replace(dfwdsBytes,[]byte{93},[]byte{37,53,68},-1)
+	dfwdsBytes = bytes.Replace(dfwdsBytes,[]byte{123},[]byte{37,55,66},-1)
+	dfwdsBytes = bytes.Replace(dfwdsBytes,[]byte{125},[]byte{37,55,68},-1)
+	dfwdsBytes = bytes.Replace(dfwdsBytes,[]byte{34},[]byte{37,50,50},-1)
+	dfwdsBytes = bytes.Replace(dfwdsBytes,[]byte{58},[]byte{37,51,65},-1)
+	dfwdsBytes = bytes.Replace(dfwdsBytes,[]byte{44},[]byte{37,50,67},-1)
 	if err != nil{
 		panic(err)
 	}
 	wdsString,dfwdsString := string(wdsBytes),string(dfwdsBytes)
 	url := commonurl + "&wds=" + wdsString + "&dfwds=" + dfwdsString + "&k1=" + k1
+	fmt.Println(url)
 	Respond,err := http.Get(url)
 	if err != nil{
 		panic(err)
