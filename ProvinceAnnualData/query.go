@@ -63,24 +63,12 @@ func QueryByProvince(provinceCode string,tradeCode string) Response{
 	wds = append(wds,Wd{provinceCode,"reg"})
 	dfwds = append(dfwds,Wd{tradeCode,"zb"})
 	wdsBytes,err := json.Marshal(wds)
-	wdsBytes = bytes.Replace(wdsBytes,[]byte{91},[]byte{37,53,66},-1)
-	wdsBytes = bytes.Replace(wdsBytes,[]byte{93},[]byte{37,53,68},-1)
-	wdsBytes = bytes.Replace(wdsBytes,[]byte{123},[]byte{37,55,66},-1)
-	wdsBytes = bytes.Replace(wdsBytes,[]byte{125},[]byte{37,55,68},-1)
-	wdsBytes = bytes.Replace(wdsBytes,[]byte{34},[]byte{37,50,50},-1)
-	wdsBytes = bytes.Replace(wdsBytes,[]byte{58},[]byte{37,51,65},-1)
-	wdsBytes = bytes.Replace(wdsBytes,[]byte{44},[]byte{37,50,67},-1)
+	wdsBytes = alterBytes(wdsBytes)
 	if err != nil{
 		panic(err)
 	}
 	dfwdsBytes,err := json.Marshal(dfwds)
-	dfwdsBytes = bytes.Replace(dfwdsBytes,[]byte{91},[]byte{37,53,66},-1)
-	dfwdsBytes = bytes.Replace(dfwdsBytes,[]byte{93},[]byte{37,53,68},-1)
-	dfwdsBytes = bytes.Replace(dfwdsBytes,[]byte{123},[]byte{37,55,66},-1)
-	dfwdsBytes = bytes.Replace(dfwdsBytes,[]byte{125},[]byte{37,55,68},-1)
-	dfwdsBytes = bytes.Replace(dfwdsBytes,[]byte{34},[]byte{37,50,50},-1)
-	dfwdsBytes = bytes.Replace(dfwdsBytes,[]byte{58},[]byte{37,51,65},-1)
-	dfwdsBytes = bytes.Replace(dfwdsBytes,[]byte{44},[]byte{37,50,67},-1)
+	dfwdsBytes = alterBytes(dfwdsBytes)
 	if err != nil{
 		panic(err)
 	}
@@ -102,4 +90,15 @@ func QueryByProvince(provinceCode string,tradeCode string) Response{
 		panic(err)
 	}
 	return result
+}
+
+func alterBytes(wdsBytes []byte) []byte{
+	wdsBytes = bytes.Replace(wdsBytes,[]byte{91},[]byte{37,53,66},-1)
+	wdsBytes = bytes.Replace(wdsBytes,[]byte{93},[]byte{37,53,68},-1)
+	wdsBytes = bytes.Replace(wdsBytes,[]byte{123},[]byte{37,55,66},-1)
+	wdsBytes = bytes.Replace(wdsBytes,[]byte{125},[]byte{37,55,68},-1)
+	wdsBytes = bytes.Replace(wdsBytes,[]byte{34},[]byte{37,50,50},-1)
+	wdsBytes = bytes.Replace(wdsBytes,[]byte{58},[]byte{37,51,65},-1)
+	wdsBytes = bytes.Replace(wdsBytes,[]byte{44},[]byte{37,50,67},-1)
+	return wdsBytes
 }
