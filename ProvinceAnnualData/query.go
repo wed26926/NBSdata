@@ -3,7 +3,6 @@ package ProvinceAnnualData
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -74,7 +73,6 @@ func QueryByProvince(provinceCode string,tradeCode string) Response{
 	}
 	wdsString,dfwdsString := string(wdsBytes),string(dfwdsBytes)
 	url := commonurl + "&wds=" + wdsString + "&dfwds=" + dfwdsString + "&k1=" + k1
-	fmt.Println(url)
 	Respond,err := http.Get(url)
 	if err != nil{
 		panic(err)
