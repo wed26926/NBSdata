@@ -22,6 +22,7 @@ func OutputToExcel(response Response){
 			zbnames[i][wdnode.Code] = wdnode.Name
 		}
 	}
+	row1.AddCell().Value = "值"
 	for _,data := range response.Returndata.Datanodes{
 		row := sheet.AddRow()
 		row.Cells = make([]*xlsx.Cell,len(zbnames))
