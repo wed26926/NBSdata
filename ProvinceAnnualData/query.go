@@ -113,4 +113,5 @@ func MultiQuery(provinces []string,trades []string) []Response{
 			result = append(result,rs)
 		}
 	}
+	return result
 }
