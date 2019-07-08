@@ -50,3 +50,7 @@ func OutputToExcel(response Response,filepath string){
 	}
 	xlsxfile.Save(filepath)
 }
+
+func MultiOut(responses []Response,Dirname string){
+
+}
