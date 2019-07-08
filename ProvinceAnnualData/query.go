@@ -3,8 +3,10 @@ package ProvinceAnnualData
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -73,6 +75,8 @@ func QueryByProvince(provinceCode string,tradeCode string) Response{
 	}
 	wdsString,dfwdsString := string(wdsBytes),string(dfwdsBytes)
 	url := commonurl + "&wds=" + wdsString + "&dfwds=" + dfwdsString + "&k1=" + k1
+	url = strings.Replace(url,"\\r","",-1)
+	fmt.Println(url)
 	Respond,err := http.Get(url)
 	if err != nil{
 		panic(err)
@@ -99,4 +103,14 @@ func alterBytes(wdsBytes []byte) []byte{
 	wdsBytes = bytes.Replace(wdsBytes,[]byte{58},[]byte{37,51,65},-1)
 	wdsBytes = bytes.Replace(wdsBytes,[]byte{44},[]byte{37,50,67},-1)
 	return wdsBytes
+}
+
+func MultiQuery(provinces []string,trades []string) []Response{
+	result := make([]Response,0)
+	for _,pro := range provinces{
+		for _,trade := range trades{
+			rs := QueryByProvince(pro,trade)
+			result = append(result,rs)
+		}
+	}
 }
