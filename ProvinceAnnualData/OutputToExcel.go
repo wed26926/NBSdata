@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-func OutputToExcel(response Response){
+func OutputToExcel(response Response,filepath string){
 	xlsxfile := xlsx.NewFile()
 	sheet,err := xlsxfile.AddSheet("指标")
 	if err != nil{
@@ -32,5 +32,21 @@ func OutputToExcel(response Response){
 		}
 		row.AddCell().SetFloat(data.Data.Data)
 	}
-	xlsxfile.Save("test.xlsx")
+	sheet2,_ := xlsxfile.AddSheet("sheet2")
+	row2 := sheet2.AddRow()
+	row2.AddCell().Value = "指标"
+	row2.AddCell().Value = "单位"
+	for _,wd := range response.Returndata.Wdnodes{
+		if wd.Wdcode != "zb"{
+			continue
+		}
+		for _,data := range wd.Nodes{
+			row := sheet2.AddRow()
+			row.AddCell().Value = data.Name
+			row.AddCell().Value = data.Unit
+		}
+		row := sheet2.AddRow()
+		row.AddCell()
+	}
+	xlsxfile.Save(filepath)
 }
