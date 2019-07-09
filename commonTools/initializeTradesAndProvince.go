@@ -1,6 +1,7 @@
 package commonTools
 
 import (
+	"bytes"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -30,6 +31,8 @@ func initializeProvince(){
 	if err != nil{
 		panic(err)
 	}
+	content = bytes.Replace(content,[]byte{13},[]byte{},-1)
+	content = bytes.Replace(content,[]byte{239,187,191},[]byte{},-1)
 	provincedata := strings.Split(string(content),"\n")
 	for _,data := range provincedata{
 		provinceDetail := strings.Split(data," ")

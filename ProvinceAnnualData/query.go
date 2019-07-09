@@ -1,9 +1,10 @@
 package ProvinceAnnualData
 
 import (
+	"NBSdata/commonTools"
 	"bytes"
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -56,12 +57,17 @@ type Response struct {
 	Returndata	Returndata 	`json:"returndata"`
 }
 
-func QueryByProvince(provinceCode string,tradeCode string) Response{
+func QueryByProvince(province string,tradeCode string) *Response{
 	timetemp := int(time.Now().UnixNano())
 	k1 := strconv.Itoa(timetemp)
 	wds := make([]Wd,0)
 	dfwds := make([]Wd,0)
-	wds = append(wds,Wd{provinceCode,"reg"})
+	pd := commonTools.GetProvinceData()[province]
+	if pd == ""{
+		log.Println("错误的省份名称:"+province)
+		return nil
+	}
+	wds = append(wds,Wd{commonTools.GetProvinceData()[province],"reg"})
 	dfwds = append(dfwds,Wd{tradeCode,"zb"})
 	wdsBytes,err := json.Marshal(wds)
 	wdsBytes = alterBytes(wdsBytes)
@@ -76,7 +82,6 @@ func QueryByProvince(provinceCode string,tradeCode string) Response{
 	wdsString,dfwdsString := string(wdsBytes),string(dfwdsBytes)
 	url := commonurl + "&wds=" + wdsString + "&dfwds=" + dfwdsString + "&k1=" + k1
 	url = strings.Replace(url,"\\r","",-1)
-	fmt.Println(url)
 	Respond,err := http.Get(url)
 	if err != nil{
 		panic(err)
@@ -86,8 +91,8 @@ func QueryByProvince(provinceCode string,tradeCode string) Response{
 	if err != nil{
 		panic(err)
 	}
-	var result Response
-	err = json.Unmarshal(buf.Bytes(),&result)
+	result := new(Response)
+	err = json.Unmarshal(buf.Bytes(),result)
 	if err != nil{
 		panic(err)
 	}
@@ -105,12 +110,15 @@ func alterBytes(wdsBytes []byte) []byte{
 	return wdsBytes
 }
 
-func MultiQuery(provinces []string,trades []string) []Response{
-	result := make([]Response,0)
+func MultiQuery(provinces []string,trades []string) *Response{
+	result := new(Response)
 	for _,pro := range provinces{
 		for _,trade := range trades{
 			rs := QueryByProvince(pro,trade)
-			result = append(result,rs)
+			if rs.Returncode != 200{
+				continue
+			}
+
 		}
 	}
 	return result

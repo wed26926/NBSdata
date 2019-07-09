@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-func OutputToExcel(response Response,filepath string){
+func OutputToExcel(response *Response,filepath string){
 	xlsxfile := xlsx.NewFile()
 	sheet,err := xlsxfile.AddSheet("指标")
 	if err != nil{
@@ -32,7 +32,7 @@ func OutputToExcel(response Response,filepath string){
 		}
 		row.AddCell().SetFloat(data.Data.Data)
 	}
-	sheet2,_ := xlsxfile.AddSheet("sheet2")
+	sheet2,_ := xlsxfile.AddSheet("单位")
 	row2 := sheet2.AddRow()
 	row2.AddCell().Value = "指标"
 	row2.AddCell().Value = "单位"
