@@ -6,6 +6,10 @@ import (
 )
 
 func OutputToExcel(response *Response,filepath string){
+	if response == nil{
+		log.Println("错误的输入！")
+		return
+	}
 	xlsxfile := xlsx.NewFile()
 	sheet,err := xlsxfile.AddSheet("指标")
 	if err != nil{
