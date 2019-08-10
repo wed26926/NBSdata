@@ -118,7 +118,7 @@ func MultiQuery(provinces []string,trades []string) *Response{
 			if rs.Returncode != 200{
 				continue
 			}
-
+			
 		}
 	}
 	return result
